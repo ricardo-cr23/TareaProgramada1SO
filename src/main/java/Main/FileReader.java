@@ -16,17 +16,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Angie Cooper
  */
 public class FileReader {
-    ArrayList<String[]> fileInstructions = new ArrayList<>();
+    ArrayList<Instruction> fileInstructions = new ArrayList<>();
     
     public FileReader(){
         fileInstructions = null;
     }
 
-    public ArrayList<String[]> getFileInstructions() {
+    public ArrayList<Instruction> getFileInstructions() {
         return fileInstructions;
     }
 
-    public void setFileInstructions(ArrayList<String[]> fileInstructions) {
+    public void setFileInstructions(ArrayList<Instruction> fileInstructions) {
         this.fileInstructions = fileInstructions;
     }
     
@@ -46,7 +46,7 @@ public class FileReader {
     public void checkFile(File file){
         List<String> operations = Arrays.asList(new String[]{"LOAD", "STORE", "MOV", "ADD", "SUB"});
         List<String> registers = Arrays.asList(new String[]{"AX", "BX", "CX", "DX"});
-        ArrayList<String[]> fileInstruct = new ArrayList<String[]>();
+        ArrayList<Instruction> fileInstruct = new ArrayList<>();
         String errors = "ERROR: No se puede cargar el archivo. ";
         int errorFlag = 0;
         try {
@@ -76,7 +76,14 @@ public class FileReader {
                             JOptionPane.showMessageDialog(null, errors);
                         }
                         else{
-                            fileInstruct.add(instruction);
+                            if(instruction[0].equals("MOV")){
+                                Instruction typeInstruction = new Instruction(instruction[0], instruction[1], Integer.parseInt(instruction[2]));
+                                fileInstruct.add(typeInstruction);
+                            }
+                            else{
+                                Instruction typeInstruction = new Instruction(instruction[0], instruction[1]);
+                                fileInstruct.add(typeInstruction);
+                            }
                         }
                     }
                     else{
@@ -96,8 +103,7 @@ public class FileReader {
             JOptionPane.showMessageDialog(null, errors); 
         }
         setFileInstructions(fileInstruct);
-        //System.out.println(Arrays.deepToString(getFileInstructions().toArray()));
+        //System.out.println(Arrays.asList(getFileInstructions().get(6).getValue()));
     }
 }
-
 

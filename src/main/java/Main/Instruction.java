@@ -14,6 +14,11 @@ public class Instruction {
         register = pRegister;
         value = pValue;
     }
+    
+    public Instruction(String pOperator, String pRegister){
+        operator = pOperator;
+        register = pRegister;
+    }
 
     public String getOperator() {
         return operator;
