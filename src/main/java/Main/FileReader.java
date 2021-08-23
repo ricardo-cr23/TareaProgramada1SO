@@ -77,8 +77,8 @@ public class FileReader {
                         }
                         else{
                             if(instruction[0].equals("MOV")){
-                                Register register = new Register(instruction[1], 0);
-                                Instruction typeInstruction = new Instruction(instruction[0], register, Integer.parseInt(instruction[2]));
+                                Register register = new Register(instruction[1], Integer.parseInt(instruction[2]));
+                                Instruction typeInstruction = new Instruction(instruction[0], register);
                                 fileInstruct.add(typeInstruction);
                             }
                             else{

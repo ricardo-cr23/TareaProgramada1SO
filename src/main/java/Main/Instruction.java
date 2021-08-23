@@ -7,19 +7,11 @@ package Main;
 public class Instruction {
     String operator = null;
     Register register = null;
-    int value = 0;
-    
-    public Instruction(String pOperator, Register pRegister, int pValue){
-        operator = pOperator;
-        register = pRegister;
-        value = pValue;
-    }
     
     public Instruction(String pOperator, Register pRegister){
         operator = pOperator;
         register = pRegister;
     }
-
     public String getOperator() {
         return operator;
     }
@@ -27,9 +19,12 @@ public class Instruction {
     public Register getRegister() {
         return register;
     }
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 
-    public int getValue() {
-        return value;
+    public void setRegister(Register register) {
+        this.register = register;
     }
     
 }

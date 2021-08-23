@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Main;
 
 /**
@@ -49,51 +44,41 @@ public class CPU {
     public Register getAX() {
         return AX;
     }
-
-    public void setAX(Register AX) {
-        this.AX = AX;
-    }
-
-    public Register getBX() {
-        return BX;
-    }
-
-    public void setBX(Register BX) {
-        this.BX = BX;
-    }
-
-    public Register getCX() {
-        return CX;
-    }
-
-    public void setCX(Register CX) {
-        this.CX = CX;
-    }
-
-    public Register getDX() {
-        return DX;
-    }
-
-    public void setDX(Register DX) {
-        this.DX = DX;
+    
+    public Register getRegister(String registerName){
+        return switch (registerName) {
+            case "AC" -> AC;
+            case "AX" -> AX;
+            case "BX" -> BX;
+            case "CX" -> CX;
+            case "DX" -> DX;
+            default -> null;
+        };               
     }
      
     public void processInstruction(){
-        if(IR.getOperator().equals("LOAD")){
-            
-        }
-        else if(IR.getOperator().equals("STORE")){
-            
-        }
-        else if(IR.getOperator().equals("MOV")){
-            
-        }
-        else if(IR.getOperator().equals("ADD")){
-            
-        }
-        //SUB
-        else{
-            
+        switch (IR.getOperator()) {
+            case "LOAD":
+                AC.setValue(IR.getRegister().getValue());
+                break;
+            case "STORE":
+                Register registerStore = getRegister(IR.getRegister().getName());
+                registerStore.setValue(AC.getValue());
+                break;
+            case "MOV":
+                Register registerMov = getRegister(IR.getRegister().getName());
+                registerMov.setValue(IR.getRegister().getValue());
+                break;
+            case "ADD":
+                int acADD = AC.getValue();
+                AC.setValue(acADD+IR.getRegister().getValue());
+                break;
+            case "SUB":
+                int acSUB = AC.getValue();
+                AC.setValue(acSUB-IR.getRegister().getValue());
+                break;
+            default:
+                break;
         }
     }
 }
