@@ -6,16 +6,16 @@ package Main;
  */
 public class Instruction {
     String operator = null;
-    String register = null;
+    Register register = null;
     int value = 0;
     
-    public Instruction(String pOperator, String pRegister, int pValue){
+    public Instruction(String pOperator, Register pRegister, int pValue){
         operator = pOperator;
         register = pRegister;
         value = pValue;
     }
     
-    public Instruction(String pOperator, String pRegister){
+    public Instruction(String pOperator, Register pRegister){
         operator = pOperator;
         register = pRegister;
     }
@@ -24,7 +24,7 @@ public class Instruction {
         return operator;
     }
 
-    public String getRegister() {
+    public Register getRegister() {
         return register;
     }
 

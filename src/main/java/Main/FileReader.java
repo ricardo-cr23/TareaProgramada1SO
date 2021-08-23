@@ -60,7 +60,7 @@ public class FileReader {
                         //If is MOV, verify that it has a comma
                         if(instruction[1].contains(",")){
                             instruction[1] = instruction[1].replace(",", "");
-                            if(Integer.parseInt(instruction[2]) > 127 || Integer.parseInt(instruction[2]) < -127){
+                            if(Integer.parseInt(instruction[2]) > 127 || Integer.parseInt(instruction[2]) < -128){
                                 errors += "El numero debe ser de máximo 7 bits. ";
                                 errorFlag = 1;
                             }
@@ -77,11 +77,13 @@ public class FileReader {
                         }
                         else{
                             if(instruction[0].equals("MOV")){
-                                Instruction typeInstruction = new Instruction(instruction[0], instruction[1], Integer.parseInt(instruction[2]));
+                                Register register = new Register(instruction[1], 0);
+                                Instruction typeInstruction = new Instruction(instruction[0], register, Integer.parseInt(instruction[2]));
                                 fileInstruct.add(typeInstruction);
                             }
                             else{
-                                Instruction typeInstruction = new Instruction(instruction[0], instruction[1]);
+                                Register register = new Register(instruction[1], 0);
+                                Instruction typeInstruction = new Instruction(instruction[0], register);
                                 fileInstruct.add(typeInstruction);
                             }
                         }
