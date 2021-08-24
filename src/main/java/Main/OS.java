@@ -15,7 +15,31 @@ public class OS {
         cpu = new CPU();
         memory = new Memory(memorySize);
     }
-        
+
+    public CPU getCpu() {
+        return cpu;
+    }
+
+    public void setCpu(CPU cpu) {
+        this.cpu = cpu;
+    }
+
+    public Memory getMemory() {
+        return memory;
+    }
+
+    public void setMemory(Memory memory) {
+        this.memory = memory;
+    }
+
+    public int getMemorySize() {
+        return memorySize;
+    }
+
+    public void setMemorySize(int memorySize) {
+        this.memorySize = memorySize;
+    }
+    
     //Function to reset CPU components contents, to work on a new instruction set.
     public void resetComponents(){
         cpu = new CPU();

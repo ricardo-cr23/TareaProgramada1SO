@@ -6,6 +6,7 @@
 package Main.guielements;
 
 import Main.FileReader;
+import Main.Instruction;
 import Main.OS;
 import javax.swing.JOptionPane;
 
@@ -17,6 +18,7 @@ public class MainFrame extends javax.swing.JFrame {
     
     private OS os;
     boolean isProgramRunning = false;
+    int currentMemoryPosition = 0;
     /**
      * Creates new form MainFrame
      */
@@ -54,10 +56,10 @@ public class MainFrame extends javax.swing.JFrame {
         jTableNormal = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTableBinary = new javax.swing.JTable();
+        jLabelIRBinary = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Computer Simulation Program");
-        setResizable(false);
 
         jButtonExit.setText("Exit");
         jButtonExit.addActionListener(new java.awt.event.ActionListener() {
@@ -199,6 +201,8 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTableBinary);
 
+        jLabelIRBinary.setText("IR(Binary): Empty");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -229,8 +233,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelDX)
                             .addComponent(jLabelCX)
@@ -239,8 +243,9 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jLabelPC)
                             .addComponent(jLabelAC)
-                            .addComponent(jLabelIR))
-                        .addGap(131, 131, 131))))
+                            .addComponent(jLabelIR)
+                            .addComponent(jLabelIRBinary))
+                        .addGap(186, 186, 186))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -258,11 +263,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelIR)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelIRBinary)
+                        .addGap(15, 15, 15)
                         .addComponent(jLabelAC)
                         .addGap(18, 18, 18)
                         .addComponent(jLabelPC)
-                        .addGap(70, 70, 70)
+                        .addGap(48, 48, 48)
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
                         .addComponent(jLabelAX)
@@ -328,16 +335,19 @@ public class MainFrame extends javax.swing.JFrame {
         
             switch (option) {
                 case 0:
-                    os.startExecution();
+                    currentMemoryPosition = os.startExecution();
                     isProgramRunning = true;
-                    
+                    this.updateMemoryGUI();
+                    this.updateGUI();
                     break;
                 case 1:
                     break;
             }
         } else {
-            os.startExecution();
+            currentMemoryPosition = os.startExecution();
             isProgramRunning = true;
+            this.updateMemoryGUI();
+            this.updateGUI();
         }
         
         /*
@@ -354,14 +364,77 @@ public class MainFrame extends javax.swing.JFrame {
     private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
         // TODO add your handling code here:
         
-        jTableNormal.setValueAt("LOL", 1, 1);
+        this.processInstruction();
+        
+        
     }//GEN-LAST:event_jButtonNextActionPerformed
 
-    private void instructionProcess(){
-        //Aqui configurar lo de la pausa de runtime
+    //This function will process each instruction one at a time, when clicking Next button. 
+    private void processInstruction(){
         
-        //Primero cargar al IR la instruccion actial
-        //os.cpu.processInstruction();
+        //This line loads the current instruction
+        os.getCpu().setIR(os.getMemory().getNormalMemory().get(currentMemoryPosition));
+        
+        os.getCpu().processInstruction();
+        
+        this.updateGUI();
+        
+        currentMemoryPosition ++;
+    }
+    
+    private void updateGUI(){
+        os.getCpu().setIR(os.getMemory().getNormalMemory().get(currentMemoryPosition));
+        this.jLabelIRBinary.setText("IR: " + os.getMemory().getBinaryMemory()[currentMemoryPosition]);
+        
+        if (os.getMemory().getNormalMemory().get(currentMemoryPosition).getOperator().equals("MOV")) {
+            this.jLabelIR.setText("IR: " + os.getMemory().getNormalMemory().get(currentMemoryPosition).getOperator() 
+                            + " "
+                            + os.getMemory().getNormalMemory().get(currentMemoryPosition).getRegister().getName() 
+                            + ", " 
+                            + os.getMemory().getNormalMemory().get(currentMemoryPosition).getRegister().getValue()
+            );
+            } else {
+            this.jLabelIR.setText("IR: " + os.getMemory().getNormalMemory().get(currentMemoryPosition).getOperator() 
+                            + " "
+                            + os.getMemory().getNormalMemory().get(currentMemoryPosition).getRegister().getName() 
+            );
+        }
+        this.jLabelPC.setText("PC: " + currentMemoryPosition);
+        this.jLabelAC.setText("AC: " + os.getCpu().getAC());
+        
+        //Registers
+        this.jLabelAX.setText("AX: " + os.getCpu().getAX());
+        this.jLabelBX.setText("BX: " + os.getCpu().getBX());
+        this.jLabelCX.setText("CX: " + os.getCpu().getCX());
+        this.jLabelDX.setText("DX: " + os.getCpu().getDX());
+    }
+    
+    private void updateMemoryGUI(){
+        int memoryIndex = 20;
+        
+        for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < 20; i++) {
+                if (os.getMemory().getNormalMemory().get(memoryIndex).getOperator().equals("MOV")) {
+                    jTableNormal.setValueAt(memoryIndex 
+                            + " " + os.getMemory().getNormalMemory().get(memoryIndex).getOperator() 
+                            + " "
+                            + os.getMemory().getNormalMemory().get(memoryIndex).getRegister().getName() 
+                            + ", " 
+                            + os.getMemory().getNormalMemory().get(memoryIndex).getRegister().getValue()
+                            , i, j);
+                    jTableBinary.setValueAt(memoryIndex + " " + os.getMemory().getBinaryMemory()[memoryIndex], i, j);
+                    memoryIndex ++;
+                } else {
+                    jTableNormal.setValueAt(memoryIndex 
+                            + " " + os.getMemory().getNormalMemory().get(memoryIndex).getOperator() 
+                            + " " 
+                            + os.getMemory().getNormalMemory().get(memoryIndex).getRegister().getName() 
+                            , i, j);
+                    jTableBinary.setValueAt(memoryIndex + " " +os.getMemory().getBinaryMemory()[memoryIndex], i, j);
+                    memoryIndex ++;                    
+                }
+            }
+        }
     }
     
     private void clearGUI(){
@@ -448,6 +521,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelCX;
     private javax.swing.JLabel jLabelDX;
     private javax.swing.JLabel jLabelIR;
+    private javax.swing.JLabel jLabelIRBinary;
     private javax.swing.JLabel jLabelPC;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;

@@ -41,6 +41,11 @@ public class Memory {
         for (int i = 0; i < memorySize; i++) {
             normalMemory.add(new Instruction("", new Register("", 0)));
         }
+        
+        for (int i = 0; i < memorySize; i++) {
+            binaryMemory[i] = "";
+        }
+                
         int initialRandomMemoryPosition = randomInitialMemoryPosition(fileInstructions.size());
         int memoryPositionCounter = initialRandomMemoryPosition;
         
