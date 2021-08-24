@@ -39,15 +39,15 @@ public class FileReader {
             // user selects a file
             File selectedFile = fileChooser.getSelectedFile();
             checkFile(selectedFile);
-        }
-        
+        }        
     }
     
-    public void checkFile(File file){
+    public boolean checkFile(File file){
         List<String> operations = Arrays.asList(new String[]{"LOAD", "STORE", "MOV", "ADD", "SUB"});
         List<String> registers = Arrays.asList(new String[]{"AX", "BX", "CX", "DX"});
         ArrayList<Instruction> fileInstruct = new ArrayList<>();
         String errors = "ERROR: No se puede cargar el archivo. ";
+        int rowCounter = 0;
         int errorFlag = 0;
         try {
             Scanner myReader = new Scanner(file);
@@ -61,12 +61,12 @@ public class FileReader {
                         if(instruction[1].contains(",")){
                             instruction[1] = instruction[1].replace(",", "");
                             if(Integer.parseInt(instruction[2]) > 127 || Integer.parseInt(instruction[2]) < -128){
-                                errors += "El numero debe ser de máximo 7 bits. ";
+                                errors += "Fila "+rowCounter +". El numero debe ser de máximo 7 bits. ";
                                 errorFlag = 1;
                             }
                         }
                         else{
-                            errors += "La instrucción move requiere una coma. ";
+                            errors += "Fila "+rowCounter +". La instrucción move requiere una coma. ";
                             errorFlag = 1;
                         }
                     }
@@ -74,6 +74,7 @@ public class FileReader {
                     if(registers.contains(instruction[1])){
                         if(errorFlag == 1){
                             JOptionPane.showMessageDialog(null, errors);
+                            return false;
                         }
                         else{
                             if(instruction[0].equals("MOV")){
@@ -89,19 +90,22 @@ public class FileReader {
                         }
                     }
                     else{
-                        errors += "El registro no existe. ";
+                        errors += "Fila "+rowCounter + ". El registro no existe. ";
                         errorFlag = 1;
                     }
                 }
                 else{
-                    errors += "Hay una operación inválida. ";
+                    errors += "Fila "+rowCounter +". Hay una operación inválida. ";
                     errorFlag = 1;
                 }
             setFileInstructions(fileInstruct);
+            rowCounter +=1;
+            return true;
         }
         myReader.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            
             errors += "Problema al cargar el archivo. ";
             JOptionPane.showMessageDialog(null, errors); 
         }
