@@ -81,10 +81,10 @@ public class CPU {
     
     public Register getRegister(String registerName){
         if(registerName.equals("AC")) return this.AC;
-        else if(registerName.equals("AX")){
-            System.out.println("Entra a AX");
-            return this.AX;
-        } 
+        else if(registerName.equals("AX")) return this.AX;
+        else if(registerName.equals("BX")) return this.BX;
+        else if(registerName.equals("CX")) return this.CX;
+        else if(registerName.equals("DX")) return this.DX;
         return null;             
     }
      
@@ -99,9 +99,7 @@ public class CPU {
                 break;
             case "MOV":
                 Register registerMov = getRegister(IR.getRegister().getName());
-                System.out.println("registerMov" + registerMov);
                 registerMov.setValue(IR.getRegister().getValue());
-                System.out.println(registerMov.getValue());
                 break;
             case "ADD":
                 int acADD = AC.getValue();
