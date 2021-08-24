@@ -59,19 +59,20 @@ public class OS {
         memory = new Memory(memorySize);
     }
     
-    //Function to start OS execution, by resetting values in computer components and loading a new instruction set in Memory. 
-    public int startExecution(){
+    public boolean loadFile(){
         //To reset internal values in CPU and Memory:
         this.resetComponents();
+        fileReader.loadFile();
         
-        this.successfulLoad = fileReader.loadFile();
-        
-        if (successfulLoad) {
-            int memoryStartPosition = memory.memoryLoad(fileReader.getFileInstructions());
-            return memoryStartPosition;
-        } else {
-            return 0;
-        }
+        return fileReader.isSuccessfulLoad();
+    }
+    
+    //Function to start OS execution, by resetting values in computer components and loading a new instruction set in Memory. 
+    public int startExecution(){
+
+        int memoryStartPosition = memory.memoryLoad(fileReader.getFileInstructions());
+        return memoryStartPosition;
+
     }
     
 
