@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Main.guielements;
 
 import Main.FileReader;
@@ -293,8 +288,8 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    //This is for the Restart button.
     private void jButtonRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRestartActionPerformed
-        // TODO add your handling code here:
         
         if (isProgramRunning) {
             String[] options = {"Yes", "No"};
@@ -306,6 +301,7 @@ public class MainFrame extends javax.swing.JFrame {
                 case 0:
                     this.clearGUI();
                     isProgramRunning = false;
+                    this.currentMemoryPosition = 0;
                     break;
                 case 1:
                     break;
@@ -313,18 +309,18 @@ public class MainFrame extends javax.swing.JFrame {
         } else {
             this.clearGUI();
             isProgramRunning = false;
+            this.currentMemoryPosition = 0;
         }
-        
-        
+
     }//GEN-LAST:event_jButtonRestartActionPerformed
 
+    //This is for the Exit button.
     private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
-        // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_jButtonExitActionPerformed
 
+    //This is for the Load button.
     private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
-        // TODO add your handling code here:
         
         //Warning window
         if (isProgramRunning) {
@@ -336,52 +332,57 @@ public class MainFrame extends javax.swing.JFrame {
             switch (option) {
                 case 0:
                     currentMemoryPosition = os.startExecution();
-                    isProgramRunning = true;
-                    this.updateMemoryGUI();
-                    this.updateGUI();
+                    if (os.isSuccessfulLoad()) {
+                        this.updateMemoryGUI();
+                        this.updateGUI();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "An instruction file was not correctly loaded."); 
+                    }
                     break;
                 case 1:
                     break;
             }
         } else {
             currentMemoryPosition = os.startExecution();
-            isProgramRunning = true;
-            this.updateMemoryGUI();
-            this.updateGUI();
-        }
-        
-        /*
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoadWarning().setVisible(true);
+            if (os.isSuccessfulLoad()) {
+                isProgramRunning = true;
+                this.updateMemoryGUI();
+                this.updateGUI();
+            } else {
+                JOptionPane.showMessageDialog(null, "An instruction file was not correctly loaded."); 
             }
-        })
-
-        */
+        }
         
     }//GEN-LAST:event_jButtonLoadActionPerformed
 
+    //This is for the Next button.
     private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
-        // TODO add your handling code here:
-        
         this.processInstruction();
-        
-        
     }//GEN-LAST:event_jButtonNextActionPerformed
 
-    //This function will process each instruction one at a time, when clicking Next button. 
+    //This function will process each instruction one at a time, when clicking Next button.
+    //Ins: None.
+    //Outs: none.
+    //Restrictions: Memory must have been loaded at this time.
     private void processInstruction(){
         
         //This line loads the current instruction
-        os.getCpu().setIR(os.getMemory().getNormalMemory().get(currentMemoryPosition));
-        
-        os.getCpu().processInstruction();
-        
-        this.updateGUI();
-        
-        currentMemoryPosition ++;
+        if ((os.getMemory().getNormalMemory().get(currentMemoryPosition).getOperator()).equals("") && isProgramRunning) {
+            JOptionPane.showMessageDialog(null, "You reached the end of the instruction list. Load a new file to start a new instruction iteration"); 
+        } else if ((os.getMemory().getNormalMemory().get(currentMemoryPosition).getOperator()).equals("") && !isProgramRunning) {
+            JOptionPane.showMessageDialog(null, "Please load an instruction file first."); 
+        } else {
+            os.getCpu().setIR(os.getMemory().getNormalMemory().get(currentMemoryPosition));
+            os.getCpu().processInstruction();
+            this.updateGUI();
+            currentMemoryPosition ++;
+        }
     }
     
+    //This function updates the GUI IR, PC, AC and Registers values.
+    //Ins: None,
+    //Outs: None. 
+    //Restrictions: OS object must exist and have valid values.
     private void updateGUI(){
         os.getCpu().setIR(os.getMemory().getNormalMemory().get(currentMemoryPosition));
         this.jLabelIRBinary.setText("IR: " + os.getMemory().getBinaryMemory()[currentMemoryPosition]);
@@ -400,15 +401,20 @@ public class MainFrame extends javax.swing.JFrame {
             );
         }
         this.jLabelPC.setText("PC: " + currentMemoryPosition);
-        this.jLabelAC.setText("AC: " + os.getCpu().getAC());
+        this.jLabelAC.setText("AC: " + os.getCpu().getAC().getValue());
         
         //Registers
-        this.jLabelAX.setText("AX: " + os.getCpu().getAX());
-        this.jLabelBX.setText("BX: " + os.getCpu().getBX());
-        this.jLabelCX.setText("CX: " + os.getCpu().getCX());
-        this.jLabelDX.setText("DX: " + os.getCpu().getDX());
+        this.jLabelAX.setText("AX: " + os.getCpu().getAX().getValue());
+        this.jLabelBX.setText("BX: " + os.getCpu().getBX().getValue());
+        this.jLabelCX.setText("CX: " + os.getCpu().getCX().getValue());
+        this.jLabelDX.setText("DX: " + os.getCpu().getDX().getValue());
     }
     
+    
+    //This function updates the Memory arrays in the GUI.
+    //Ins: None.
+    //Outs: None.
+    //Restrictions: OS object must exist, and have valid values.
     private void updateMemoryGUI(){
         int memoryIndex = 20;
         
@@ -437,7 +443,11 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
-    private void clearGUI(){
+    //This function clears the values in the GUI and the Operating System. 
+    //Ins: None.
+    //Outs: None.
+    //Restrictions: OS object must exist. 
+    private void clearGUI(){        
         jTableNormal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"20", "40", "60", "80"},
@@ -493,6 +503,7 @@ public class MainFrame extends javax.swing.JFrame {
             }));
 
         jLabelIR.setText("IR: Empty");
+        jLabelIRBinary.setText("IR(Binary): Empty");
         jLabelAC.setText("AC: 0");
         jLabelPC.setText("PC: Empty");
 
