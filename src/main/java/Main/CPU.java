@@ -5,16 +5,21 @@ package Main;
  * @author Angie Cooper
  */
 public class CPU {
-    Register PC = null;
-    Instruction IR = null;
-    Register AC = null;
-    
-    Register AX = null;
-    Register BX = null;
-    Register CX = null;
-    Register DX = null;
+    Register PC;
+    Instruction IR;
+    Register AC;
+    Register AX;
+    Register BX;
+    Register CX;
+    Register DX;
     
     public CPU(){
+        PC = new Register("PC", 0);
+        AC = new Register("AC", 0);
+        AX = new Register("AX", 0);
+        BX = new Register("BX", 0);
+        CX = new Register("CX", 0);
+        DX = new Register("DX", 0);
         
     }
 
@@ -75,14 +80,12 @@ public class CPU {
     }
     
     public Register getRegister(String registerName){
-        return switch (registerName) {
-            case "AC" -> AC;
-            case "AX" -> AX;
-            case "BX" -> BX;
-            case "CX" -> CX;
-            case "DX" -> DX;
-            default -> null;
-        };               
+        if(registerName.equals("AC")) return this.AC;
+        else if(registerName.equals("AX")){
+            System.out.println("Entra a AX");
+            return this.AX;
+        } 
+        return null;             
     }
      
     public void processInstruction(){
@@ -96,7 +99,9 @@ public class CPU {
                 break;
             case "MOV":
                 Register registerMov = getRegister(IR.getRegister().getName());
+                System.out.println("registerMov" + registerMov);
                 registerMov.setValue(IR.getRegister().getValue());
+                System.out.println(registerMov.getValue());
                 break;
             case "ADD":
                 int acADD = AC.getValue();

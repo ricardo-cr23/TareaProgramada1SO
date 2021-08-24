@@ -97,6 +97,7 @@ public class FileReader {
                     errors += "Hay una operación inválida. ";
                     errorFlag = 1;
                 }
+            setFileInstructions(fileInstruct);
         }
         myReader.close();
         } catch (FileNotFoundException e) {
@@ -104,7 +105,6 @@ public class FileReader {
             errors += "Problema al cargar el archivo. ";
             JOptionPane.showMessageDialog(null, errors); 
         }
-        setFileInstructions(fileInstruct);
         //System.out.println(Arrays.asList(getFileInstructions().get(6).getValue()));
     }
 }
