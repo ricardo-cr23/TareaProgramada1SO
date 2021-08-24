@@ -36,6 +36,7 @@ public class Memory {
         this.binaryMemory = binaryMemory;
     }
 
+    //Function to load instruction file into memory. 
     public int memoryLoad(ArrayList<Instruction> fileInstructions){
         //Fills ArrayList with blanks.
         for (int i = 0; i < memorySize; i++) {
@@ -59,6 +60,7 @@ public class Memory {
         
     }
     
+    //Function to generate a random intial memory position. Takes in consideration reserved parts of the memory, and the length of the instruction file.  
     private int randomInitialMemoryPosition(int maxMemoryPosition){
         int minUsableMemoryPosition = 20;
         Random rn = new Random();
