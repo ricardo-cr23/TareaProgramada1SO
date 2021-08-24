@@ -91,7 +91,8 @@ public class CPU {
     public void processInstruction(){
         switch (IR.getOperator()) {
             case "LOAD":
-                AC.setValue(IR.getRegister().getValue());
+                Register registerLoad = getRegister(IR.getRegister().getName());
+                AC.setValue(registerLoad.getValue());
                 break;
             case "STORE":
                 Register registerStore = getRegister(IR.getRegister().getName());
@@ -103,11 +104,13 @@ public class CPU {
                 break;
             case "ADD":
                 int acADD = AC.getValue();
-                AC.setValue(acADD+IR.getRegister().getValue());
+                Register registerAdd = getRegister(IR.getRegister().getName());
+                AC.setValue(acADD+registerAdd.getValue());
                 break;
             case "SUB":
+                Register registerSub= getRegister(IR.getRegister().getName());
                 int acSUB = AC.getValue();
-                AC.setValue(acSUB-IR.getRegister().getValue());
+                AC.setValue(acSUB-registerSub.getValue());
                 break;
             default:
                 break;
