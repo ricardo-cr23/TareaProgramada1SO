@@ -12,13 +12,15 @@ import javax.swing.JOptionPane;
 public class MainFrame extends javax.swing.JFrame {
     
     private OS os;
-    boolean isProgramRunning = false;
+    boolean isProgramRunning;
     int currentMemoryPosition = 0;
+    boolean successfulLoad = false;
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         os = new OS();
+        isProgramRunning = false;
         initComponents();
     }
 
@@ -300,17 +302,26 @@ public class MainFrame extends javax.swing.JFrame {
             switch (option) {
                 case 0:
                     this.clearGUI();
-                    isProgramRunning = false;
                     this.currentMemoryPosition = 0;
+                    successfulLoad = false;
+                    isProgramRunning = false;
+                    os.getFileReader().setSuccessfulLoad(false);
                     break;
                 case 1:
+                    break;
+                default:
                     break;
             }
         } else {
             this.clearGUI();
-            isProgramRunning = false;
             this.currentMemoryPosition = 0;
+            successfulLoad = false;
+            isProgramRunning = false;
+            os.getFileReader().setSuccessfulLoad(false);
         }
+        
+        
+        System.out.println("Reinicio cambio a " + isProgramRunning);
 
     }//GEN-LAST:event_jButtonRestartActionPerformed
 
@@ -331,33 +342,52 @@ public class MainFrame extends javax.swing.JFrame {
         
             switch (option) {
                 case 0:
-                    currentMemoryPosition = os.startExecution();
-                    if (os.isSuccessfulLoad()) {
+                    successfulLoad = false;
+                    isProgramRunning = false;
+                    os.getFileReader().setSuccessfulLoad(false);
+                    System.out.println("1 cambio a " + isProgramRunning);
+                    successfulLoad = os.loadFile();
+                    if (successfulLoad){
+                        isProgramRunning = true;
+                        System.out.println("2 cambio a " + isProgramRunning);
+                        currentMemoryPosition = os.startExecution();
                         this.updateMemoryGUI();
                         this.updateGUI();
+                        break;
                     } else {
-                        JOptionPane.showMessageDialog(null, "An instruction file was not correctly loaded."); 
+                        JOptionPane.showMessageDialog(null, "A file was not loaded. Please try again."); 
                     }
-                    break;
                 case 1:
+                    break;
+                default:
                     break;
             }
         } else {
-            currentMemoryPosition = os.startExecution();
-            if (os.isSuccessfulLoad()) {
+            successfulLoad = false;
+            isProgramRunning = false;
+            os.getFileReader().setSuccessfulLoad(false);
+            System.out.println("3 cambio a " + isProgramRunning);
+            successfulLoad = os.loadFile();
+            if (successfulLoad){
+                System.out.println("Entro a if");
                 isProgramRunning = true;
+                System.out.println("4 cambio a " + isProgramRunning);
+                currentMemoryPosition = os.startExecution();
                 this.updateMemoryGUI();
                 this.updateGUI();
             } else {
-                JOptionPane.showMessageDialog(null, "An instruction file was not correctly loaded."); 
+                JOptionPane.showMessageDialog(null, "A file was not loaded. Please try again.");
             }
         }
         
+        //this.isProgramRunning = true;
+        //System.out.println("3 cambio a " + isProgramRunning);
     }//GEN-LAST:event_jButtonLoadActionPerformed
 
     //This is for the Next button.
     private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
         this.processInstruction();
+        
     }//GEN-LAST:event_jButtonNextActionPerformed
 
     //This function will process each instruction one at a time, when clicking Next button.
@@ -367,10 +397,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void processInstruction(){
         
         //This line loads the current instruction
-        if ((os.getMemory().getNormalMemory().get(currentMemoryPosition).getOperator()).equals("") && isProgramRunning) {
+        if (!isProgramRunning && !successfulLoad) {
+            JOptionPane.showMessageDialog(null, "Please load an instruction file first.");
+        } else if  ((os.getMemory().getNormalMemory().get(currentMemoryPosition).getOperator()).equals("") && isProgramRunning && successfulLoad) {
             JOptionPane.showMessageDialog(null, "You reached the end of the instruction list. Load a new file to start a new instruction iteration"); 
-        } else if ((os.getMemory().getNormalMemory().get(currentMemoryPosition).getOperator()).equals("") && !isProgramRunning) {
-            JOptionPane.showMessageDialog(null, "Please load an instruction file first."); 
         } else {
             os.getCpu().setIR(os.getMemory().getNormalMemory().get(currentMemoryPosition));
             os.getCpu().processInstruction();

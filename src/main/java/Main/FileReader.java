@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class FileReader {
     ArrayList<Instruction> fileInstructions = new ArrayList<>();
+    private boolean successfulLoad = false;
     
     public FileReader(){
         fileInstructions = null;
@@ -26,11 +27,20 @@ public class FileReader {
         return fileInstructions;
     }
 
+    public boolean isSuccessfulLoad() {
+        return successfulLoad;
+    }
+
+    public void setSuccessfulLoad(boolean successfulLoad) {
+        this.successfulLoad = successfulLoad;
+    }
+
+
     public void setFileInstructions(ArrayList<Instruction> fileInstructions) {
         this.fileInstructions = fileInstructions;
     }
     
-    public boolean loadFile(){
+    public void loadFile(){
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("ASM FILES", "asm");
         fileChooser.setFileFilter(filter);
@@ -38,13 +48,12 @@ public class FileReader {
         if (result == JFileChooser.APPROVE_OPTION) {
             // user selects a file
             File selectedFile = fileChooser.getSelectedFile();
-            return checkFile(selectedFile);
+            checkFile(selectedFile);
         }
-        return false;
         
     }
     
-    public boolean checkFile(File file){
+    public void checkFile(File file){
         List<String> operations = Arrays.asList(new String[]{"LOAD", "STORE", "MOV", "ADD", "SUB"});
         List<String> registers = Arrays.asList(new String[]{"AX", "BX", "CX", "DX"});
         ArrayList<Instruction> fileInstruct = new ArrayList<>();
@@ -76,7 +85,6 @@ public class FileReader {
                     if(registers.contains(instruction[1])){
                         if(errorFlag == 1){
                             JOptionPane.showMessageDialog(null, errors);
-                            return false;
                         }
                         else{
                             if(instruction[0].equals("MOV")){
@@ -102,14 +110,14 @@ public class FileReader {
                 }
             setFileInstructions(fileInstruct);
             rowCounter +=1;
-            return true;
         }
         myReader.close();
         } catch (FileNotFoundException e) {
             errors += "Problema al cargar el archivo. ";
             JOptionPane.showMessageDialog(null, errors); 
         }
-        return false;
+        
+        this.successfulLoad = true;
     }
 }
 
