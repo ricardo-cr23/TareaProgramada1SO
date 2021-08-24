@@ -7,4 +7,34 @@ package Main;
 
 public class OS {
     
+    private CPU cpu;
+    private Memory memory;
+    private int memorySize = 100;
+    
+    public OS() {
+        cpu = new CPU();
+        memory = new Memory(memorySize);
+    }
+        
+    //Function to reset CPU components contents, to work on a new instruction set.
+    public void resetComponents(){
+        cpu = new CPU();
+        memory = new Memory(memorySize);
+    }
+    
+    public int startExecution(){
+        //To reset internal values in CPU and Memory:
+        this.resetComponents();
+        
+        FileReader fileReader = new FileReader();
+        fileReader.loadFile();
+        
+        int memoryStartPosition = memory.memoryLoad(fileReader.getFileInstructions());
+        
+        return memoryStartPosition;
+    }
+    
+
+    
+    
 }
