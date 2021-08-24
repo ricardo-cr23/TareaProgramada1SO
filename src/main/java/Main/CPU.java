@@ -8,6 +8,7 @@ public class CPU {
     Register PC = null;
     Instruction IR = null;
     Register AC = null;
+    
     Register AX = null;
     Register BX = null;
     Register CX = null;
@@ -43,6 +44,34 @@ public class CPU {
 
     public Register getAX() {
         return AX;
+    }
+    
+    public void setAX(Register AX) {
+        this.AX = AX;
+    }
+
+    public Register getBX() {
+        return BX;
+    }
+
+    public void setBX(Register BX) {
+        this.BX = BX;
+    }
+
+    public Register getCX() {
+        return CX;
+    }
+
+    public void setCX(Register CX) {
+        this.CX = CX;
+    }
+
+    public Register getDX() {
+        return DX;
+    }
+
+    public void setDX(Register DX) {
+        this.DX = DX;
     }
     
     public Register getRegister(String registerName){

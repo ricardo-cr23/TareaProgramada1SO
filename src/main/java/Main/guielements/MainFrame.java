@@ -6,17 +6,22 @@
 package Main.guielements;
 
 import Main.FileReader;
+import Main.OS;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author ricar
  */
 public class MainFrame extends javax.swing.JFrame {
-
+    
+    private OS os;
+    boolean isProgramRunning = false;
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
+        os = new OS();
         initComponents();
     }
 
@@ -283,6 +288,83 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButtonRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRestartActionPerformed
         // TODO add your handling code here:
+        
+        if (isProgramRunning) {
+            String[] options = {"Yes", "No"};
+            int option = JOptionPane.showOptionDialog(null, "Do you want to restart? Current progress will be lost.",
+                "Warning",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+        
+            switch (option) {
+                case 0:
+                    this.clearGUI();
+                    isProgramRunning = false;
+                    break;
+                case 1:
+                    break;
+            }
+        } else {
+            this.clearGUI();
+            isProgramRunning = false;
+        }
+        
+        
+    }//GEN-LAST:event_jButtonRestartActionPerformed
+
+    private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jButtonExitActionPerformed
+
+    private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
+        // TODO add your handling code here:
+        
+        //Warning window
+        if (isProgramRunning) {
+            String[] options = {"Yes", "No"};
+            int option = JOptionPane.showOptionDialog(null, "Do you want to load a new instruction file? Current progress will be lost.",
+                "Warning",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+        
+            switch (option) {
+                case 0:
+                    os.startExecution();
+                    isProgramRunning = true;
+                    
+                    break;
+                case 1:
+                    break;
+            }
+        } else {
+            os.startExecution();
+            isProgramRunning = true;
+        }
+        
+        /*
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LoadWarning().setVisible(true);
+            }
+        })
+
+        */
+        
+    }//GEN-LAST:event_jButtonLoadActionPerformed
+
+    private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
+        // TODO add your handling code here:
+        
+        jTableNormal.setValueAt("LOL", 1, 1);
+    }//GEN-LAST:event_jButtonNextActionPerformed
+
+    private void instructionProcess(){
+        //Aqui configurar lo de la pausa de runtime
+        
+        //Primero cargar al IR la instruccion actial
+        //os.cpu.processInstruction();
+    }
+    
+    private void clearGUI(){
         jTableNormal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"20", "40", "60", "80"},
@@ -309,7 +391,7 @@ public class MainFrame extends javax.swing.JFrame {
             new String [] {
                 "20-39", "40-59", "60-79", "80-99"
             }));
-        
+
         jTableBinary.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"20", "40", "60", "80"},
@@ -336,39 +418,19 @@ public class MainFrame extends javax.swing.JFrame {
             new String [] {
                 "20-39", "40-59", "60-79", "80-99"
             }));
-        
+
         jLabelIR.setText("IR: Empty");
         jLabelAC.setText("AC: 0");
         jLabelPC.setText("PC: Empty");
-        
+
        //Registers:
         jLabelAX.setText("AX: 0");
         jLabelBX.setText("BX: 0");
         jLabelCX.setText("CX: 0");
         jLabelDX.setText("DX: 0");
-        
-    }//GEN-LAST:event_jButtonRestartActionPerformed
 
-    private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
-        // TODO add your handling code here:
-        System.exit(0);
-    }//GEN-LAST:event_jButtonExitActionPerformed
-
-    private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
-        // TODO add your handling code here:
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoadWarning().setVisible(true);
-            }
-        });
-        
-    }//GEN-LAST:event_jButtonLoadActionPerformed
-
-    private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
-        // TODO add your handling code here:
-        jTableNormal.setValueAt("LOL", 1, 1);
-    }//GEN-LAST:event_jButtonNextActionPerformed
-
+        os.resetComponents();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonExit;

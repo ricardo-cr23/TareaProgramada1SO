@@ -12,20 +12,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Main {
-
+    
     public static void main(String[] args) {
         // TODO code application logic here
-        FileReader prueba = new FileReader();
-        prueba.loadFile();
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainFrame().setVisible(true);
-                
             }
         });
-        //System.out.println("hola");
+        
+        
         //FileReader prueba = new FileReader();
         //prueba.loadFile();
+        //System.out.println("hola");
 
     }
 
