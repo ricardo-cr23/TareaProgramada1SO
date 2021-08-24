@@ -30,7 +30,7 @@ public class FileReader {
         this.fileInstructions = fileInstructions;
     }
     
-    public void loadFile(){
+    public boolean loadFile(){
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("ASM FILES", "asm");
         fileChooser.setFileFilter(filter);
@@ -38,8 +38,10 @@ public class FileReader {
         if (result == JFileChooser.APPROVE_OPTION) {
             // user selects a file
             File selectedFile = fileChooser.getSelectedFile();
-            checkFile(selectedFile);
-        }        
+            return checkFile(selectedFile);
+        }
+        return false;
+        
     }
     
     public boolean checkFile(File file){
@@ -104,12 +106,10 @@ public class FileReader {
         }
         myReader.close();
         } catch (FileNotFoundException e) {
-            //e.printStackTrace();
-            
             errors += "Problema al cargar el archivo. ";
             JOptionPane.showMessageDialog(null, errors); 
         }
-        //System.out.println(Arrays.asList(getFileInstructions().get(6).getValue()));
+        return false;
     }
 }
 
