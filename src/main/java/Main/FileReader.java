@@ -70,37 +70,43 @@ public class FileReader {
                 String[] instruction = data.split(" ");
                 //Verify that the operation instruction is on the list of allowed operations
                 if(operations.contains(instruction[0])){
-                    if(instruction[0].equals("MOV")){
-                        //If is MOV, verify that it has a comma
-                        if(instruction[1].contains(",")){
-                            instruction[1] = instruction[1].replace(",", "");
-                            if(Integer.parseInt(instruction[2]) > 127 || Integer.parseInt(instruction[2]) < -128){
-                                errors += "Row "+rowCounter +". The number must be a maximum of 7 bits. ";
+                    if((instruction[0].equals("MOV") && instruction.length == 3) || (!(instruction[0].equals("MOV")) && instruction.length == 2)){
+                        if(instruction[0].equals("MOV")){
+                            //If is MOV, verify that it has a comma
+                            if(instruction[1].contains(",")){
+                                instruction[1] = instruction[1].replace(",", "");
+                                if(Integer.parseInt(instruction[2]) > 127 || Integer.parseInt(instruction[2]) < -128){
+                                    errors += "Row "+rowCounter +". The number must be a maximum of 7 bits. ";
+                                    errorFlag = 1;
+                                }
+                            }
+                            else{
+                                errors += "Row "+rowCounter +". The move statement requires a comma. ";
                                 errorFlag = 1;
                             }
                         }
+                          //Verify that the register is on the list of allowed registers
+                        if(registers.contains(instruction[1])){
+                            if(errorFlag != 1){
+                                if(instruction[0].equals("MOV")){
+                                    Register register = new Register(instruction[1], Integer.parseInt(instruction[2]));
+                                    Instruction typeInstruction = new Instruction(instruction[0], register);
+                                    fileInstruct.add(typeInstruction);
+                                }
+                                else{
+                                    Register register = new Register(instruction[1], 0);
+                                    Instruction typeInstruction = new Instruction(instruction[0], register);
+                                    fileInstruct.add(typeInstruction);
+                                }
+                            }
+                        }
                         else{
-                            errors += "Row "+rowCounter +". The move statement requires a comma. ";
+                            errors += "Row "+rowCounter + ". The register does not exist. ";
                             errorFlag = 1;
                         }
                     }
-                      //Verify that the register is on the list of allowed registers
-                    if(registers.contains(instruction[1])){
-                        if(errorFlag != 1){
-                            if(instruction[0].equals("MOV")){
-                                Register register = new Register(instruction[1], Integer.parseInt(instruction[2]));
-                                Instruction typeInstruction = new Instruction(instruction[0], register);
-                                fileInstruct.add(typeInstruction);
-                            }
-                            else{
-                                Register register = new Register(instruction[1], 0);
-                                Instruction typeInstruction = new Instruction(instruction[0], register);
-                                fileInstruct.add(typeInstruction);
-                            }
-                        }
-                    }
-                    else{
-                        errors += "Row "+rowCounter + ". The register does not exist. ";
+                    else {
+                        errors += "Row "+rowCounter + ". The instruction is invalid. ";
                         errorFlag = 1;
                     }
                 }
