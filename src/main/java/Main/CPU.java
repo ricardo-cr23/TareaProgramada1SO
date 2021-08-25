@@ -79,6 +79,8 @@ public class CPU {
         this.DX = DX;
     }
     
+    //Entry: String with a register name
+    //It receives the name of a register and returns the register object that has the same name
     public Register getRegister(String registerName){
         if(registerName.equals("AC")) return this.AC;
         else if(registerName.equals("AX")) return this.AX;
@@ -87,7 +89,10 @@ public class CPU {
         else if(registerName.equals("DX")) return this.DX;
         return null;             
     }
-     
+    
+    //Entry: Empty
+    //Processes the instruction found in the IR register. Depending on the operation 
+    //you want to do, the registers AC, AX, BX, CX, DX are changed.
     public void processInstruction(){
         switch (IR.getOperator()) {
             case "LOAD":

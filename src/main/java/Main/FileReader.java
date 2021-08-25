@@ -30,6 +30,9 @@ public class FileReader {
         this.fileInstructions = fileInstructions;
     }
     
+    //Entry: Empty
+    //Opens a window to choose a file with an asm extension. If the file loads 
+    //successfully the file is evaluated
     public boolean loadFile(){
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("ASM FILES", "asm");
@@ -48,7 +51,7 @@ public class FileReader {
         List<String> operations = Arrays.asList(new String[]{"LOAD", "STORE", "MOV", "ADD", "SUB"});
         List<String> registers = Arrays.asList(new String[]{"AX", "BX", "CX", "DX"});
         ArrayList<Instruction> fileInstruct = new ArrayList<>();
-        String errors = "ERROR: No se puede cargar el archivo. ";
+        String errors = "ERROR: Unable to upload file. ";
         int rowCounter = 0;
         int errorFlag = 0;
         try {
@@ -63,22 +66,18 @@ public class FileReader {
                         if(instruction[1].contains(",")){
                             instruction[1] = instruction[1].replace(",", "");
                             if(Integer.parseInt(instruction[2]) > 127 || Integer.parseInt(instruction[2]) < -128){
-                                errors += "Fila "+rowCounter +". El numero debe ser de máximo 7 bits. ";
+                                errors += "Row "+rowCounter +". The number must be a maximum of 7 bits. ";
                                 errorFlag = 1;
                             }
                         }
                         else{
-                            errors += "Fila "+rowCounter +". La instrucción move requiere una coma. ";
+                            errors += "Row "+rowCounter +". The move statement requires a comma. ";
                             errorFlag = 1;
                         }
                     }
                       //Verify that the register is on the list of allowed registers
                     if(registers.contains(instruction[1])){
-                        if(errorFlag == 1){
-                            JOptionPane.showMessageDialog(null, errors);
-                            return false;
-                        }
-                        else{
+                        if(errorFlag != 1){
                             if(instruction[0].equals("MOV")){
                                 Register register = new Register(instruction[1], Integer.parseInt(instruction[2]));
                                 Instruction typeInstruction = new Instruction(instruction[0], register);
@@ -92,24 +91,29 @@ public class FileReader {
                         }
                     }
                     else{
-                        errors += "Fila "+rowCounter + ". El registro no existe. ";
+                        errors += "Row "+rowCounter + ". The register does not exist. ";
                         errorFlag = 1;
                     }
                 }
                 else{
-                    errors += "Fila "+rowCounter +". Hay una operación inválida. ";
+                    errors += "Row "+rowCounter +". There is an invalid operation. ";
                     errorFlag = 1;
                 }
-            setFileInstructions(fileInstruct);
             rowCounter +=1;
-            return true;
         }
         myReader.close();
         } catch (FileNotFoundException e) {
-            errors += "Problema al cargar el archivo. ";
+            errors += "Problem uploading file. ";
             JOptionPane.showMessageDialog(null, errors); 
         }
-        return false;
+        if(errorFlag == 1){
+            JOptionPane.showMessageDialog(null, errors);
+            return false;
+        }
+        else{
+            setFileInstructions(fileInstruct);
+            return true;
+        }
     }
 }
 
