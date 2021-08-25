@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Main;
 
 public class OS {
@@ -10,6 +5,8 @@ public class OS {
     private CPU cpu;
     private Memory memory;
     private int memorySize = 100;
+    private FileReader fileReader = new FileReader();
+    private boolean successfulLoad = false;
     
     public OS() {
         cpu = new CPU();
@@ -39,6 +36,22 @@ public class OS {
     public void setMemorySize(int memorySize) {
         this.memorySize = memorySize;
     }
+
+    public FileReader getFileReader() {
+        return fileReader;
+    }
+
+    public void setFileReader(FileReader fileReader) {
+        this.fileReader = fileReader;
+    }
+
+    public boolean isSuccessfulLoad() {
+        return successfulLoad;
+    }
+
+    public void setSuccessfulLoad(boolean successfulLoad) {
+        this.successfulLoad = successfulLoad;
+    }
     
     //Function to reset CPU components contents, to work on a new instruction set.
     public void resetComponents(){
@@ -46,16 +59,20 @@ public class OS {
         memory = new Memory(memorySize);
     }
     
-    public int startExecution(){
+    public boolean loadFile(){
         //To reset internal values in CPU and Memory:
         this.resetComponents();
-        
-        FileReader fileReader = new FileReader();
         fileReader.loadFile();
         
+        return fileReader.isSuccessfulLoad();
+    }
+    
+    //Function to start OS execution, by resetting values in computer components and loading a new instruction set in Memory. 
+    public int startExecution(){
+
         int memoryStartPosition = memory.memoryLoad(fileReader.getFileInstructions());
-        
         return memoryStartPosition;
+
     }
     
 

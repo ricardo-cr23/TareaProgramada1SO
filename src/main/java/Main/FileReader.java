@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class FileReader {
     ArrayList<Instruction> fileInstructions = new ArrayList<>();
+    private boolean successfulLoad = false;
     
     public FileReader(){
         fileInstructions = null;
@@ -26,10 +27,18 @@ public class FileReader {
         return fileInstructions;
     }
 
+    public boolean isSuccessfulLoad() {
+        return successfulLoad;
+    }
+
+    public void setSuccessfulLoad(boolean successfulLoad) {
+        this.successfulLoad = successfulLoad;
+    }
+
+
     public void setFileInstructions(ArrayList<Instruction> fileInstructions) {
         this.fileInstructions = fileInstructions;
     }
-    
     //Entry: Empty
     //Opens a window to choose a file with an asm extension. If the file loads 
     //successfully the file is evaluated
@@ -52,7 +61,7 @@ public class FileReader {
         List<String> registers = Arrays.asList(new String[]{"AX", "BX", "CX", "DX"});
         ArrayList<Instruction> fileInstruct = new ArrayList<>();
         String errors = "ERROR: Unable to upload file. ";
-        int rowCounter = 0;
+        int rowCounter = 1;
         int errorFlag = 0;
         try {
             Scanner myReader = new Scanner(file);
@@ -112,6 +121,7 @@ public class FileReader {
         }
         else{
             setFileInstructions(fileInstruct);
+            this.successfulLoad = true;
             return true;
         }
     }
