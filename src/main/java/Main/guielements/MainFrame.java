@@ -319,10 +319,6 @@ public class MainFrame extends javax.swing.JFrame {
             isProgramRunning = false;
             os.getFileReader().setSuccessfulLoad(false);
         }
-        
-        
-        System.out.println("Reinicio cambio a " + isProgramRunning);
-
     }//GEN-LAST:event_jButtonRestartActionPerformed
 
     //This is for the Exit button.
@@ -345,11 +341,9 @@ public class MainFrame extends javax.swing.JFrame {
                     successfulLoad = false;
                     isProgramRunning = false;
                     os.getFileReader().setSuccessfulLoad(false);
-                    System.out.println("1 cambio a " + isProgramRunning);
                     successfulLoad = os.loadFile();
                     if (successfulLoad){
                         isProgramRunning = true;
-                        System.out.println("2 cambio a " + isProgramRunning);
                         currentMemoryPosition = os.startExecution();
                         this.updateMemoryGUI();
                         this.updateGUI();
@@ -366,12 +360,9 @@ public class MainFrame extends javax.swing.JFrame {
             successfulLoad = false;
             isProgramRunning = false;
             os.getFileReader().setSuccessfulLoad(false);
-            System.out.println("3 cambio a " + isProgramRunning);
             successfulLoad = os.loadFile();
             if (successfulLoad){
-                System.out.println("Entro a if");
                 isProgramRunning = true;
-                System.out.println("4 cambio a " + isProgramRunning);
                 currentMemoryPosition = os.startExecution();
                 this.updateMemoryGUI();
                 this.updateGUI();
